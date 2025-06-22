@@ -27,13 +27,36 @@ Variables declared inside a { } block can be accessed from outside the block.
 
 This is because of the temporal dead zone , we will discuss it later (:
 
+**Can be defined with:** let and const (not var).
+
 ### Global Scope
 
-The variables that can accessed from anywhere in the code are known as global variables 
+- A variable declared outside of any function or block is in the global scope.
+
+- It can be accessed anywhere in the code after it’s declared.
+  
+ ```js
+var globalVar = "I'm global"; // declared in global scope
+
+function showGlobalVar() {
+  console.log(globalVar); //  Accessible inside a function
+}
+
+showGlobalVar(); // Output: I'm global
+
+console.log(globalVar); //  Accessible in global scope too
+```
+
+
+ **Can be defined with:** var, let, and const (but let and const in global scope are not recommended for good practices).
 
 ### Function or  Local Scope
 
-Variables declared within a JavaScript function, are **LOCAL** to the function:
+- A variable declared inside a function is in the function scope.
+- It can only be accessed within that function.
+
+**Local scope:** A locally scoped variable is one that can’t be used outside the place where it’s defined.
+  Variables declared within a JavaScript function, are **LOCAL** to the function:
 
 ```jsx
 
@@ -45,6 +68,8 @@ function myFunction() {
 **Question -> Can you tell that the variable carName have local scope or block scope?** 
 
 ```
+
+**Can be defined with:** var, let, and const inside a function.
 
 ## Q2. Difference Between the == and === operators?
 
@@ -85,11 +110,11 @@ console.log(1 === '1');       // false, number is not equal to string
 console.log(true === 1);      // false, boolean is not equal to number
 ```
 
-## Q3. Function and there types
+## Q3. Function and types
 
 Functions in JavaScript are blocks of reusable code that perform a specific task. There are several types of functions in JavaScript:
 
-### Simple Functions with functions declaration
+### Function Declaration (Named Function)
 
 These functions are simply defined with the **function** keyword and the name of the function
 
@@ -103,8 +128,11 @@ function print(name){
 
 print("Dev") // Dev
 ```
+-  Hoisted: You can call it before it's declared.
+-  Has its own this.
 
-### **Function Expressions or A**nonymous function expression:
+  
+### **Function Expressions**
 
 What is an expression in Mathematics ?
 Evaluating equation into a single value is known as an expression in mathematics.
@@ -125,9 +153,27 @@ const greet = function(name) {
 
 ```
 
+ - must be declared before use.
+-  Useful for assigning to variables or passing as arguments.
+
  They can be named (function expression) or anonymous (anonymous function expression).
 
-We call then anonymous function expression because these functions don’t have there own name that’s they are anonymous
+
+ ###  **Anonymous function expression**
+
+We call then anonymous function expression because these functions don’t have there own name that’s they are anonymous, often used as a callback.
+
+```js
+setTimeout(function () {
+  console.log("Hello after 2 seconds");
+}, 2000);
+```
+
+can also be used with arrow syntax:
+
+```js
+setTimeout(() => console.log("Hello"), 1000);
+```
 
 ### **Arrow Functions**:
 
@@ -141,6 +187,39 @@ const print = (name) => {
 print("Dev"); // Dev
 
 ```
+
+- Does not have its own this, arguments, or super — it uses the parent's context.
+
+ ### **Constructor Functions**: 
+
+ ```js
+function Person(name) {
+  this.name = name;
+}
+
+const p = new Person("Azra");
+console.log(p.name); // Azra
+
+```
+
+- Starts with capital letter (convention)
+- Creates an object with new keyword
+
+  
+
+| Type                 | Hoisted | Has Own `this`    | Syntax Style           |
+| -------------------- | ------- | --------------    | ---------------------- |
+| Function Declaration | ✅ Yes   | ✅ Yes          | `function name() {}`   |
+| Function Expression  | ❌ No    | ✅ Yes          | `const f = function()` |
+| Arrow Function       | ❌ No    | ❌ No           | `const f = () => {}`   |
+| Anonymous Function   | ❌ No    | ✅ Yes          | Used as argument       |
+| IIFE                 | ❌ No    | ✅ Yes          | `(() => {})()`         |
+| Constructor Function | ✅ Yes   | ✅ Yes          | `function Name() {}`   |
+| Generator Function   | ✅ Yes   | ✅ Yes          | `function* gen() {}`   |
+| Async Function       | ✅ Yes   | ✅ Yes          | `async function()`     |
+
+
+
 
 ## Q4. What is IIFE (Immediately Invoked Function Expression)?
 A Immediately Invoked Function Expression (IIFE) is a JavaScript function that runs as soon as it is defined. It is a design pattern that is used to create a private scope for variables to avoid polluting the global scope.To call the function immediately after defining it, we wrap the function in parentheses and then append an additional set of parentheses at the end.
@@ -160,15 +239,26 @@ console.log("Hello World") // this will be executed first then the next line wil
 console.log("Hello World") // this will be executed after the first line
 ```
 
+JavaScript is traditionally considered an interpreted language, but modern JavaScript engines use Just-In-Time (JIT) compilation, making it both interpreted and compiled at runtime.
+It is also a single-threaded language, meaning it processes one command at a time, but handles asynchronous tasks through its event loop mechanism.
+
+
 ## Q6. What is the difference between null and undefined in JavaScript?
 The main difference between null and undefined in JavaScript is that null is an assigned value that represents the absence of a value, while undefined is a variable that has been declared but not assigned a value.Let's consider a example,to store variable value we use a box and if the box is empty then it is null and if the box is not present then it is undefined.
-
 
 
 ```jsx
 let a;
 console.log(a); // undefined
 ```
+
+| Feature | `undefined`                     | `null`                              |
+| ------- | ------------------------------- | ----------------------------------- |
+| Type    | `undefined`                     | `object` *(weird JavaScript quirk)* |
+| Set by  | JavaScript (default)            | Developer (manually)                |
+| Means   | Variable declared, but no value | Value is intentionally empty        |
+
+
 
 ## Q7. Is JavaScript a synchronous or asynchronous programming language?
 ### Synchronous Programming
@@ -185,21 +275,32 @@ console.log("Hello World")  // this will be executed after the first line
 ```
 In the above example, the first and third console.log statements will be executed first, followed by the second console.log statement after a delay of 2 seconds.
 
+- So, JavaScript is single-threaded and synchronous by default, but it uses features like callbacks, promises, and the event loop to handle asynchronous tasks efficiently.
+- 
+
 ## Q8. what is difference between window and document in JavaScript?
 
-| Window | Document |
-| --- | --- |
-| It is the root level element in any web page. | It is the child element of the window object. |
-| It represents the browser window or tab. | It represents the HTML document loaded in the window. |
-|By default window object is available implicitly in the page. | You can access it via window.document or document. |
-| It has methods like alert(), confirm() and properties like document, location, history. | It has methods like getElementById(), getElementsByClassName() and properties like body, forms. |
+| Feature  | `window`                                 | `document`                                     |
+| -------- | ---------------------------------------- | ---------------------------------------------- |
+| Meaning  | Represents the **browser window or tab** | Represents the **webpage (DOM)** inside window |
+| Type     | Global object                            | Property of the `window` object                |
+| Use      | For browser-level operations             | For manipulating HTML/CSS content              |
+| Examples | `alert()`, `setTimeout()`, `location`    | `getElementById()`, `querySelector()`, `forms` |
+| Access   | `window.alert()` or just `alert()`       | `window.document` or just `document`           |
+
+In JavaScript, window is the global object representing the browser window. It contains methods like alert() and setTimeout().
+
+On the other hand, document is part of the window object and represents the webpage content (DOM). We use it to access and manipulate HTML elements.
+
+
 
 ## Q9. What is the eval() function in JavaScript?
-The eval() function in JavaScript is used to evaluate or execute an argument as an expression. The argument can be a string containing JavaScript code, a function, or an expression. The eval() function is a global function and can be used to execute code dynamically at runtime.
+The eval() function is a global JavaScript function that takes a string as an argument and executes it as JavaScript code. it is dangerous and slow, so it’s rarely recommended in modern JavaScript.
 
 ```jsx
 console.log(eval('2 + 2')); // 4
 ```
+
 
 ## Q10. What is the difference between http and https?
 HTTP and HTTPS are both protocols used to transfer data over the web, but they operate over different communication channels and have different security mechanisms.The main difference between HTTP and HTTPS is that HTTP is not secure and data is transferred in plain text, while HTTPS is secure and data is encrypted before being transferred.
@@ -212,8 +313,24 @@ HTTP and HTTPS are both protocols used to transfer data over the web, but they o
 | It is not secure and can be intercepted by attackers. | It is secure and protects against eavesdropping
 
 ## Q11. What is the difference between local storage and session storage in HTML5?
-Local storage and session storage are both web storage options available in HTML5 that allow developers to store data locally in the user's browser. The main difference between local storage and session storage is the lifetime of the data and the scope of the data.The data saved in session storage is available only for the duration of the page session, while the data saved in local storage persists even after the browser is closed and reopened.
+Local Storage and Session Storage are both web storage options available in HTML5 that allow developers to store data locally in the user's browser.
 
+The main difference between them lies in the lifetime and scope of the stored data:
+
+**Session Storage:**
+
+- The data is available only for the duration of the page session.
+
+- It is only accessible within the same tab and gets cleared once the tab is closed.
+
+**Local Storage:**
+
+- The data persists even after the browser is closed and reopened.
+
+- It is shared across all tabs/windows from the same origin (same site).
+  
+
+- Use localStorage for storing persistent data, and sessionStorage for temporary, tab-specific data.
 
 ## Q12. What is the ternary operator in JavaScript?
 Do you ever heared about the if else statement in JavaScript, the ternary operator is the shorthand version of the if else statement in JavaScript. The ternary operator is a conditional operator that takes three operands: a condition followed by a question mark (?), an expression to execute if the condition is true, and a colon (:) followed by an expression to execute if the condition is false.
@@ -228,7 +345,11 @@ Do you ever heared about the if else statement in JavaScript, the ternary operat
 
 
 ## Q13. What is the JSON object in JavaScript?
-JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read and write and easy for machines to parse and generate. JSON is a text-based format and is used to represent structured data. In JavaScript, the JSON object is used to parse and stringify JSON data. The JSON object has two methods: JSON.parse() and JSON.stringify().
+JSON stands for JavaScript Object Notation.
+It is a lightweight data format used to store and exchange data between a server and a client. JSON is a text-based format and is used to represent structured data. 
+
+In JavaScript, the JSON object provides methods to convert between JSON and JavaScript objects. 
+
 
 ```jsx
 let person = {
@@ -243,6 +364,10 @@ console.log(json); // {"name":"John","age":30,"city":"New York"}
 let obj = JSON.parse(json);
 console.log(obj.name); // John
 ```
+
+- JSON is commonly used for API communication and data storage, and JavaScript provides built-in methods to easily work with it.
+
+
 
 ---------------- Arrays and objects ------------------------
 
@@ -268,7 +393,7 @@ console.log(person.name); // John
 ```
 
 ## Q16. What is the forEeach() method in JavaScript?
-The forEach() method in JS used to execute a function on every element of an array.We can use the forEach() method to iterate over an array and perform an operation on each element without using a for loop.It will change the original array if we perfoam any operation on element.
+The forEach() method in JS used to execute a function on every element of an array. We can use the forEach() method to iterate over an array and perform an operation on each element without using a for loop.It will change the original array if we perform any operation on an element.
 
 
 
@@ -312,6 +437,9 @@ let numbers = [1, 2, 3, 4, 5];
 let sum = numbers.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 console.log(sum); // 15
 ```
+
+- reduce method takes  2 arguments first one is the callback function and second one is the accumulator's initial value.
+- if we don't initialize the accumulator then its value will be equal to the first element and code will be more cleaner.
 
 ## Q21. What is the find() method in JavaScript?
 The find() method in JavaScript is used to find the first element in an array that satisfies a certain condition. The find() method returns the value of the first element that satisfies the condition, or undefined if no such element is found.
